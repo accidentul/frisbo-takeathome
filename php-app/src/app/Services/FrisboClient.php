@@ -108,7 +108,23 @@ class FrisboClient
      */
     private function request(string $method, string $endpoint, array $data = []): array
     {
-        $response = Http::withToken($this->token)->$method($this->baseUrl . $endpoint, $data);
-        return $response->json();
+        try {
+            $response = Http::withToken($this->token)->$method($this->baseUrl . $endpoint, $data);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+            return [
+                'error' => true,
+                'message' => $response->body(),
+                'status' => $response->status()
+            ];
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+                'status' => 500
+            ];
+        }
     }
 }
