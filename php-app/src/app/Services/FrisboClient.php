@@ -110,7 +110,6 @@ class FrisboClient
     {
         try {
             $response = Http::withToken($this->token)->$method($this->baseUrl . $endpoint, $data);
-
             if ($response->successful()) {
                 return $response->json();
             }
